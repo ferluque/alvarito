@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cerro Encinas — Mapa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600&display=swap');
+  :root{
+    --ocean-deep:#101a22;--ocean:#1b2a36;--foam:#cddde6;
+    --land:#0b0e11;--road:#b4bec4;--wall:#9aa6ad;
+    --path-edge:#3f3d34;--path:#5d5a49;
+    --pool-a:#1c7493;--pool-b:#2ea2c2;--ink:#e8eef2;
+    --poi:#f0b429;--poi-deep:#1a1205;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{background:#06090c;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;font-family:'Oswald',sans-serif;}
+  .map-frame{position:relative;width:100%;max-width:980px;aspect-ratio:1538/1024;border-radius:10px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 0 1px rgba(120,150,170,.12) inset;}
+  svg{display:block;width:100%;height:100%;}
+  .title-block{position:absolute;top:26px;left:30px;z-index:5;line-height:.82;pointer-events:none;user-select:none;}
+  .title-block .eyebrow{font-weight:500;font-size:clamp(8px,1.3vw,12px);letter-spacing:.42em;text-transform:uppercase;color:rgba(205,221,230,.62);margin:0 0 8px 3px;}
+  .title-block h1{font-family:'Anton','Arial Narrow',sans-serif;text-transform:uppercase;color:var(--ink);font-size:clamp(28px,5.4vw,54px);letter-spacing:.01em;text-shadow:0 3px 14px rgba(0,0,0,.85),0 0 1px rgba(0,0,0,.9);}
+  .title-block .rule{margin-top:10px;margin-left:4px;width:64px;height:3px;background:var(--ink);opacity:.85;}
+  @media (max-width:480px){.title-block{top:16px;left:18px;}}
+
+  /* ---- Marcador de punto de interés ---- */
+  .poi{cursor:pointer;outline:none;}
+  .poi .poi-core{transition:transform .15s ease;transform-box:fill-box;transform-origin:center;}
+  .poi:hover .poi-core,.poi:focus-visible .poi-core{transform:scale(1.12);}
+  .poi:focus-visible .poi-ring-static{stroke:#fff;}
+  .poi-letter{font-family:'Anton','Arial Narrow',sans-serif;fill:var(--poi-deep);font-size:34px;text-anchor:middle;dominant-baseline:central;pointer-events:none;}
+
+  /* ---- Overlay ---- */
+  .poi-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .poi-overlay[hidden]{display:none;}
+  .poi-overlay__backdrop{position:absolute;inset:0;background:rgba(5,9,12,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);animation:fade .2s ease;}
+  .poi-card{position:relative;width:100%;max-width:430px;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;background:linear-gradient(180deg,#10181f,#0b1116);border:1px solid rgba(205,221,230,.18);border-radius:14px;padding:30px 32px 28px;box-shadow:0 24px 60px rgba(0,0,0,.65),0 0 0 1px rgba(0,0,0,.4),0 0 40px rgba(205,221,230,.06);animation:rise .24s cubic-bezier(.2,.7,.3,1);}
+  .poi-card__eyebrow{font-weight:600;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--poi);margin-bottom:10px;}
+  .poi-card__title{font-family:'Anton','Arial Narrow',sans-serif;text-transform:uppercase;color:var(--ink);font-size:34px;line-height:.95;letter-spacing:.01em;margin-bottom:14px;}
+  .poi-card__body{font-size:15.5px;line-height:1.55;color:#c4ccd2;font-weight:300;}
+  .poi-card__body .ph{color:var(--poi);font-weight:500;}
+  .poi-card__body strong{color:var(--ink);font-weight:500;}
+  .poi-card__cta{margin-top:24px;width:100%;font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--poi-deep);background:var(--poi);border:none;border-radius:8px;padding:13px;cursor:pointer;transition:filter .15s ease,transform .05s ease;}
+  .poi-card__cta:hover{filter:brightness(1.08);}
+  .poi-card__cta:active{transform:translateY(1px);}
+  .poi-card__close{position:absolute;top:14px;right:16px;width:30px;height:30px;border:none;background:transparent;color:#8a949b;font-size:24px;line-height:1;cursor:pointer;border-radius:6px;transition:color .15s ease,background .15s ease;}
+  .poi-card__close:hover{color:var(--ink);background:rgba(205,221,230,.08);}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes rise{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.poi-pulse{display:none}}
+
+  /* ---- Pantalla completa ---- */
+  .fs-btn{position:absolute;top:22px;right:20px;z-index:6;display:inline-flex;align-items:center;gap:8px;
+    font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink);background:rgba(13,20,26,.62);border:1px solid rgba(205,221,230,.22);border-radius:8px;
+    padding:8px 11px;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+    transition:background .15s ease,border-color .15s ease;}
+  .fs-btn:hover{background:rgba(13,20,26,.85);border-color:rgba(205,221,230,.4);}
+  .fs-btn svg{width:15px;height:15px;display:block;}
+  .fs-btn .ico-exit{display:none;}
+  .map-frame.is-immersive .fs-btn .ico-open,
+  .map-frame:fullscreen .fs-btn .ico-open,
+  .map-frame:-webkit-full-screen .fs-btn .ico-open{display:none;}
+  .map-frame.is-immersive .fs-btn .ico-exit,
+  .map-frame:fullscreen .fs-btn .ico-exit,
+  .map-frame:-webkit-full-screen .fs-btn .ico-exit{display:block;}
+
+  .map-frame.is-immersive{position:fixed;inset:0;width:100vw;height:100vh;max-width:none;aspect-ratio:auto;border-radius:0;z-index:50;}
+  .map-frame:fullscreen{width:100vw;height:100vh;max-width:none;aspect-ratio:auto;border-radius:0;}
+  .map-frame:-webkit-full-screen{width:100vw;height:100vh;max-width:none;aspect-ratio:auto;border-radius:0;}
+  html.immersive-lock,html.immersive-lock body{overflow:hidden;height:100%;}
+
+  /* ---- Aviso de girar el móvil ---- */
+  .rotate-hint{display:none;}
+  @media (orientation:portrait){
+    .map-frame.is-immersive .rotate-hint,
+    .map-frame:fullscreen .rotate-hint,
+    .map-frame:-webkit-full-screen .rotate-hint{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+      position:absolute;inset:0;z-index:40;background:rgba(5,9,12,.92);text-align:center;padding:30px;}
+  }
+  .rotate-hint svg{width:52px;height:52px;color:var(--poi);animation:rot 2.6s ease-in-out infinite;}
+  .rotate-hint p{font-family:'Oswald',sans-serif;font-weight:300;font-size:15px;letter-spacing:.03em;color:#c4ccd2;max-width:230px;line-height:1.5;}
+  @keyframes rot{0%,42%{transform:rotate(0)}58%,100%{transform:rotate(-90deg)}}
+
+  /* Nota de girar dentro de la intro (solo en vertical) */
+  .intro-rotate{display:none;}
+  @media (orientation:portrait){
+    .intro-rotate{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:20px;
+      font-family:'Oswald',sans-serif;font-weight:500;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--poi);}
+    .intro-rotate svg{width:18px;height:18px;flex:none;animation:rot 2.6s ease-in-out infinite;}
+  }
+  @media (max-width:600px){.fs-btn .fs-label{display:none;}.fs-btn{padding:9px;}}
+</style>
+</head>
+<body>
+  <div class="map-frame">
+    <div class="title-block">
+      <p class="eyebrow">Finca</p>
+      <h1>Cerro<br>Encinas</h1>
+      <div class="rule"></div>
+    </div>
+
+    <button class="fs-btn" id="fs-btn" aria-label="Pantalla completa">
+      <svg class="ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M16 21h5v-5M8 21H3v-5"/></svg>
+      <svg class="ico-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h5V3M21 8h-5V3M21 16h-5v5M3 16h5v5"/></svg>
+      <span class="fs-label">Pantalla completa</span>
+    </button>
+
+    <div class="rotate-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><line x1="11" y1="19" x2="13" y2="19"/></svg>
+      <p>Gira el móvil en horizontal para ver el mapa completo.</p>
+    </div>
+
+    <svg viewBox="0 0 1538 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa esquemático de la finca Cerro Encinas">
+      <defs>
+        <filter id="coastGlow" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="16"/></filter>
+        <filter id="coastGlowSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="36"/></filter>
+        <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0"/></filter>
+        <radialGradient id="oceanGrad" cx="44%" cy="42%" r="72%"><stop offset="0%" stop-color="#22323f"/><stop offset="60%" stop-color="var(--ocean)"/><stop offset="100%" stop-color="var(--ocean-deep)"/></radialGradient>
+        <linearGradient id="poolGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--pool-b)"/><stop offset="100%" stop-color="var(--pool-a)"/></linearGradient>
+        <radialGradient id="poiGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--poi)" stop-opacity="0.5"/><stop offset="100%" stop-color="var(--poi)" stop-opacity="0"/></radialGradient>
+
+        <path id="parcel" d="M 110,118 L 1380,100 Q 1404,100 1404,124 L 1410,866 Q 1410,884 1392,884 L 116,888 Q 100,888 100,872 L 100,134 Q 100,118 110,118 Z"/>
+        <clipPath id="landClip"><use href="#parcel"/></clipPath>
+
+        <!-- coche 2D vista cenital -->
+        <symbol id="car" viewBox="0 0 44 80">
+          <rect x="1" y="13" width="6" height="15" rx="2" fill="#14181c"/>
+          <rect x="37" y="13" width="6" height="15" rx="2" fill="#14181c"/>
+          <rect x="1" y="52" width="6" height="15" rx="2" fill="#14181c"/>
+          <rect x="37" y="52" width="6" height="15" rx="2" fill="#14181c"/>
+          <rect x="6" y="4" width="32" height="72" rx="11" fill="#b3bbc0" stroke="#5b656c" stroke-width="1.5"/>
+          <rect x="10" y="22" width="24" height="34" rx="7" fill="#8c949a"/>
+          <path d="M 11,25 Q 22,19 33,25 L 31,31 Q 22,27 13,31 Z" fill="#d3dade" opacity="0.85"/>
+          <path d="M 13,50 Q 22,55 31,50 L 33,56 Q 22,61 11,56 Z" fill="#cdd4d8" opacity="0.6"/>
+        </symbol>
+      </defs>
+
+      <!-- 1 · Océano -->
+      <rect x="0" y="0" width="1538" height="1024" fill="url(#oceanGrad)"/>
+
+      <!-- 2 · Halo de costa -->
+      <use href="#parcel" fill="none" stroke="var(--foam)" stroke-width="54" opacity="0.22" filter="url(#coastGlowSoft)"/>
+      <use href="#parcel" fill="none" stroke="var(--foam)" stroke-width="30" opacity="0.5"  filter="url(#coastGlow)"/>
+      <use href="#parcel" fill="none" stroke="#eaf3f7"     stroke-width="10" opacity="0.85" filter="url(#coastGlow)"/>
+
+      <!-- 3 · Tierra -->
+      <use href="#parcel" fill="var(--land)"/>
+      <use href="#parcel" fill="#13181d" opacity="0.55"/>
+
+      <!-- 4 · Textura -->
+      <g clip-path="url(#landClip)"><rect x="0" y="0" width="1538" height="1024" filter="url(#grain)" opacity="0.05"/></g>
+
+      <!-- 5 · Camino (según boceto) -->
+      <g id="paths" clip-path="url(#landClip)" fill="#222a32">
+        <rect x="107" y="266" width="373" height="245" rx="8"/>
+        <rect x="349" y="500" width="131" height="249" rx="8"/>
+        <rect x="468" y="672" width="289" height="77" rx="8"/>
+      </g>
+
+      <!-- 6 · Muro perimetral (con hueco de acceso a la izquierda) -->
+      <g id="perimeter" fill="none" stroke="var(--wall)" stroke-linecap="round" opacity="0.5">
+        <path d="M 100,470 L 100,872 Q 100,888 116,888 L 1392,884 Q 1410,884 1410,866 L 1404,124 Q 1404,100 1380,100 L 110,118 Q 100,118 100,134 L 100,300" stroke-width="4"/>
+      </g>
+
+      <!-- 7 · Vegetación -->
+      <g id="vegetation">
+        <g opacity="0.95">
+          <circle cx="1258" cy="748" r="118" fill="#0c130d"/>
+          <circle cx="1218" cy="720" r="56" fill="#0f1810"/>
+          <circle cx="1300" cy="772" r="48" fill="#0f1810"/>
+          <circle cx="1262" cy="792" r="40" fill="#0a100b"/>
+        </g>
+        <g opacity="0.92" fill="#0e160f">
+          <circle cx="845" cy="685" r="26"/>
+          <circle cx="856" cy="673" r="14"/>
+        </g>
+        <!-- árbol nuevo (abajo izquierda) -->
+        <g opacity="0.95">
+          <circle cx="338" cy="810" r="55" fill="#0c130d"/>
+          <circle cx="316" cy="794" r="28" fill="#0f1810"/>
+          <circle cx="360" cy="824" r="24" fill="#0f1810"/>
+          <circle cx="340" cy="834" r="20" fill="#0a100b"/>
+        </g>
+      </g>
+
+      <!-- 8 · Chalet -->
+      <g id="buildings">
+        <rect x="505" y="158" width="270" height="352" fill="#222a32" stroke="#465360" stroke-width="3"/>
+        <g stroke="#566472" stroke-width="2" opacity="0.7" fill="none">
+          <line x1="505" y1="210" x2="775" y2="210"/>
+          <line x1="505" y1="262" x2="775" y2="262"/>
+          <line x1="580" y1="262" x2="580" y2="510"/>
+          <line x1="640" y1="262" x2="640" y2="510"/>
+        </g>
+        <!-- 8.1 Patio -->
+        <rect x="505" y="510" width="270" height="140" fill="#171d23" stroke="#465360" stroke-width="3"/>
+        <!-- 8.2 Cocina -->
+        <rect x="505" y="510" width="75" height="140" fill="#222a32" stroke="#3c4751" stroke-width="2"/>
+      </g>
+
+      <!-- 9 · Parking (coches 2D alineados) -->
+      <g id="parking">
+        <use href="#car" x="168" y="525" width="40" height="73" transform="rotate(90 188 561.5)"/>
+        <use href="#car" x="168" y="598" width="40" height="73" transform="rotate(90 188 634.5)"/>
+        <use href="#car" x="168" y="671" width="40" height="73" transform="rotate(90 188 707.5)"/>
+        <use href="#car" x="168" y="744" width="40" height="73" transform="rotate(90 188 780.5)"/>
+      </g>
+
+      <!-- 10 · Muro interior junto a la piscina -->
+      <g id="wall-pool" fill="none" stroke="#c2ccd2" stroke-width="6" stroke-linecap="round" opacity="0.85">
+        <path d="M 947,190 L 1114,190 L 1114,648 L 947,648"/>
+      </g>
+
+      <!-- 11 · Piscina (acento de color) -->
+      <g id="pool">
+        <rect x="925" y="252" width="153" height="258" rx="8" fill="#dfe7ec" opacity="0.9"/>
+        <rect x="934" y="262" width="135" height="238" rx="5" fill="url(#poolGrad)"/>
+        <rect x="934" y="262" width="135" height="238" rx="5" fill="none" stroke="#bfeefb" stroke-width="1.6" opacity="0.5"/>
+        <path d="M 945,286 q 58,16 113,0" stroke="#cdf3ff" stroke-width="2" fill="none" opacity="0.4"/>
+      </g>
+
+      <!-- 12 · Marcadores de las pruebas -->
+      <g id="markers">
+        <!-- Punto A · Patio -->
+        <g id="poi-a" class="poi" tabindex="0" role="button" aria-label="Punto A: Patio. Abrir prueba.">
+          <circle cx="678" cy="580" r="46" fill="url(#poiGlow)"/>
+          <circle class="poi-pulse" cx="678" cy="580" r="25" fill="none" stroke="var(--poi)" stroke-width="2.5">
+            <animate attributeName="r" values="25;44;25" dur="2.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.75;0;0.75" dur="2.6s" repeatCount="indefinite"/>
+          </circle>
+          <g class="poi-core">
+            <circle class="poi-ring-static" cx="678" cy="580" r="25" fill="var(--poi)" stroke="#fff7e6" stroke-width="2.5"/>
+            <text x="678" y="582" class="poi-letter">A</text>
+          </g>
+        </g>
+      </g>
+    </svg>
+
+    <!-- Overlay de bienvenida (se abre al cargar) -->
+    <div class="poi-overlay" id="overlay-intro">
+      <div class="poi-overlay__backdrop"></div>
+      <div class="poi-card poi-card--intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+        <p class="poi-card__eyebrow">Última misión de campo</p>
+        <h2 class="poi-card__title" id="intro-title">Operación<br>Cerro Encinas</h2>
+        <p class="poi-card__body">
+          Agente <strong>Alvarito</strong>, alias <span class="ph">«la leyenda del juvenil A»</span>:
+          tras cinco meses fuera de servicio, vuelves a la acción.
+          <br><br>
+          Tu cometido es un <strong>reconocimiento</strong> de la finca Cerro Encinas, paso previo al golpe.
+          Recorre los puntos del mapa y resuelve cada prueba <strong>en orden</strong>, de la A en adelante:
+          cada acertijo superado desbloquea el siguiente.
+          <br><br>
+          Al final del recorrido te espera el material para tu próxima aventura… esta vez, de oficina.
+        </p>
+        <button class="poi-card__cta" id="intro-start">Iniciar reconocimiento</button>
+        <div class="intro-rotate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><line x1="11" y1="19" x2="13" y2="19"/></svg>
+          <span>Gira el móvil en horizontal</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay del Punto A -->
+    <div class="poi-overlay" id="overlay-a" hidden>
+      <div class="poi-overlay__backdrop" data-close></div>
+      <div class="poi-card" role="dialog" aria-modal="true" aria-labelledby="poi-a-title">
+        <button class="poi-card__close" data-close aria-label="Cerrar">&times;</button>
+        <p class="poi-card__eyebrow">Punto A · Patio</p>
+        <h2 class="poi-card__title" id="poi-a-title">Primera prueba</h2>
+        <p class="poi-card__body">
+          ¡Feliz cumpleaños! Bienvenido a tu búsqueda del tesoro por Cerro Encinas.
+          Cada punto del mapa esconde una prueba; supéralas todas y darás con tu regalo.
+          Empezamos aquí, en el patio.
+          <br><br>
+          <span class="ph">[Aquí irá el texto / acertijo del primer punto, que decidiremos ahora.]</span>
+        </p>
+        <button class="poi-card__cta" data-close>Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var intro    = document.getElementById('overlay-intro');
+      var introBtn = document.getElementById('intro-start');
+      var marker   = document.getElementById('poi-a');
+      var overlay  = document.getElementById('overlay-a');
+
+      introBtn.addEventListener('click', function(){ intro.hidden = true; });
+
+      // --- Pantalla completa / modo inmersivo ---
+      var frame = document.querySelector('.map-frame');
+      var fsBtn = document.getElementById('fs-btn');
+      function inNativeFs(){
+        return document.fullscreenElement === frame || document.webkitFullscreenElement === frame;
+      }
+      function enterImmersive(){
+        frame.classList.add('is-immersive');
+        document.documentElement.classList.add('immersive-lock');
+      }
+      function exitImmersive(){
+        frame.classList.remove('is-immersive');
+        document.documentElement.classList.remove('immersive-lock');
+      }
+      function toggleFs(){
+        var req = frame.requestFullscreen || frame.webkitRequestFullscreen;
+        if(req){
+          if(inNativeFs()){
+            (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+          } else {
+            var p = req.call(frame);
+            if(p && p.catch){ p.catch(enterImmersive); }
+          }
+        } else if(frame.classList.contains('is-immersive')){
+          exitImmersive();
+        } else {
+          enterImmersive();
+        }
+      }
+      fsBtn.addEventListener('click', toggleFs);
+
+      function open(){ overlay.hidden = false; }
+      function close(){ overlay.hidden = true; marker.focus(); }
+      marker.addEventListener('click', open);
+      marker.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+      });
+      overlay.querySelectorAll('[data-close]').forEach(function(el){
+        el.addEventListener('click', close);
+      });
+
+      document.addEventListener('keydown', function(e){
+        if(e.key !== 'Escape') return;
+        if(frame.classList.contains('is-immersive')){ exitImmersive(); }
+        else if(!intro.hidden){ intro.hidden = true; }
+        else if(!overlay.hidden){ close(); }
+      });
+    })();
+  </script>
+</body>
+</html>
