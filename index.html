@@ -30,6 +30,10 @@
   .poi:hover .poi-core,.poi:focus-visible .poi-core{transform:scale(1.12);}
   .poi:focus-visible .poi-ring-static{stroke:#fff;}
   .poi-letter{font-family:'Anton','Arial Narrow',sans-serif;fill:var(--poi-deep);font-size:34px;text-anchor:middle;dominant-baseline:central;pointer-events:none;}
+  .poi.is-hidden{display:none;}
+  .poi.is-done .poi-glow,.poi.is-done .poi-pulse{display:none;}
+  .poi.is-done .poi-ring-static{fill:#46505a;stroke:#8a949c;}
+  .poi.is-done .poi-letter{fill:#cfd6da;}
 
   /* ---- Overlay ---- */
   .poi-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;}
@@ -44,11 +48,33 @@
   .poi-card__cta{margin-top:24px;width:100%;font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--poi-deep);background:var(--poi);border:none;border-radius:8px;padding:13px;cursor:pointer;transition:filter .15s ease,transform .05s ease;}
   .poi-card__cta:hover{filter:brightness(1.08);}
   .poi-card__cta:active{transform:translateY(1px);}
-  .poi-card__close{position:absolute;top:14px;right:16px;width:30px;height:30px;border:none;background:transparent;color:#8a949b;font-size:24px;line-height:1;cursor:pointer;border-radius:6px;transition:color .15s ease,background .15s ease;}
+  .poi-card__close{position:absolute;top:14px;right:16px;width:30px;height:30px;border:none;background:transparent;color:#8a949b;font-size:24px;line-height:1;cursor:pointer;border-radius:6px;transition:color .15s ease,background .15s ease;z-index:2;}
   .poi-card__close:hover{color:var(--ink);background:rgba(205,221,230,.08);}
   @keyframes fade{from{opacity:0}to{opacity:1}}
   @keyframes rise{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){.poi-pulse{display:none}}
+
+  /* ---- Pasos dentro de una prueba ---- */
+  .poi-step[hidden]{display:none;}
+  .poi-answer{display:flex;gap:10px;margin-top:22px;}
+  .poi-input{flex:1;min-width:0;font-family:'Oswald',sans-serif;font-size:18px;font-weight:500;color:var(--ink);
+    background:rgba(205,221,230,.06);border:1px solid rgba(205,221,230,.22);border-radius:8px;padding:12px 14px;outline:none;
+    transition:border-color .15s ease,background .15s ease;}
+  .poi-input::placeholder{color:#6b757c;font-weight:300;}
+  .poi-input:focus{border-color:var(--poi);background:rgba(240,180,41,.08);}
+  .poi-input::-webkit-outer-spin-button,.poi-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .poi-input[type=number]{-moz-appearance:textfield;appearance:textfield;}
+  .poi-check{flex:none;font-family:'Oswald',sans-serif;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--poi-deep);background:var(--poi);border:none;border-radius:8px;padding:0 18px;cursor:pointer;transition:filter .15s ease,transform .05s ease;}
+  .poi-check:hover{filter:brightness(1.08);}
+  .poi-check:active{transform:translateY(1px);}
+  .poi-hint{margin-top:14px;font-size:13.5px;line-height:1.5;color:#e0a44b;font-weight:300;}
+  .poi-hint[hidden]{display:none;}
+  .poi-success-ico{width:46px;height:46px;color:var(--poi);margin-bottom:8px;display:block;}
+  .poi-input--code{text-transform:uppercase;letter-spacing:.12em;}
+  .poi-hintbtn{margin-top:14px;font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--poi);background:transparent;border:1px solid rgba(240,180,41,.5);border-radius:8px;padding:9px 16px;cursor:pointer;transition:background .15s ease;}
+  .poi-hintbtn:hover{background:rgba(240,180,41,.1);}
+  .poi-hint--clue{color:var(--poi);font-style:italic;}
 
   /* ---- Pantalla completa ---- */
   .fs-btn{position:absolute;top:22px;right:20px;z-index:6;display:inline-flex;align-items:center;gap:8px;
@@ -226,7 +252,7 @@
       <g id="markers">
         <!-- Punto A · Patio -->
         <g id="poi-a" class="poi" tabindex="0" role="button" aria-label="Punto A: Patio. Abrir prueba.">
-          <circle cx="678" cy="580" r="46" fill="url(#poiGlow)"/>
+          <circle class="poi-glow" cx="678" cy="580" r="46" fill="url(#poiGlow)"/>
           <circle class="poi-pulse" cx="678" cy="580" r="25" fill="none" stroke="var(--poi)" stroke-width="2.5">
             <animate attributeName="r" values="25;44;25" dur="2.6s" repeatCount="indefinite"/>
             <animate attributeName="opacity" values="0.75;0;0.75" dur="2.6s" repeatCount="indefinite"/>
@@ -234,6 +260,19 @@
           <g class="poi-core">
             <circle class="poi-ring-static" cx="678" cy="580" r="25" fill="var(--poi)" stroke="#fff7e6" stroke-width="2.5"/>
             <text x="678" y="582" class="poi-letter">A</text>
+          </g>
+        </g>
+
+        <!-- Punto B · Terreno bajo el árbol (oculto hasta completar A) -->
+        <g id="poi-b" class="poi is-hidden" tabindex="0" role="button" aria-label="Punto B: terreno bajo el árbol. Abrir prueba.">
+          <circle class="poi-glow" cx="1258" cy="748" r="46" fill="url(#poiGlow)"/>
+          <circle class="poi-pulse" cx="1258" cy="748" r="25" fill="none" stroke="var(--poi)" stroke-width="2.5">
+            <animate attributeName="r" values="25;44;25" dur="2.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.75;0;0.75" dur="2.6s" repeatCount="indefinite"/>
+          </circle>
+          <g class="poi-core">
+            <circle class="poi-ring-static" cx="1258" cy="748" r="25" fill="var(--poi)" stroke="#fff7e6" stroke-width="2.5"/>
+            <text x="1258" y="750" class="poi-letter">B</text>
           </g>
         </g>
       </g>
@@ -253,7 +292,7 @@
           Recorre los puntos del mapa y resuelve cada prueba <strong>en orden</strong>, de la A en adelante:
           cada acertijo superado desbloquea el siguiente.
           <br><br>
-          Al final del recorrido te espera el material para tu próxima aventura… esta vez, de oficina.
+          Puesto que tu trabajo de campo está próximo a su fin, la recompensa que encontrarás al final te ayudará en la preparación para tu nueva aventura...
         </p>
         <button class="poi-card__cta" id="intro-start">Iniciar reconocimiento</button>
         <div class="intro-rotate">
@@ -263,23 +302,83 @@
       </div>
     </div>
 
-    <!-- Overlay del Punto A -->
+    <!-- Overlay del Punto A (3 pasos: briefing -> pregunta -> acierto) -->
     <div class="poi-overlay" id="overlay-a" hidden>
       <div class="poi-overlay__backdrop" data-close></div>
       <div class="poi-card" role="dialog" aria-modal="true" aria-labelledby="poi-a-title">
         <button class="poi-card__close" data-close aria-label="Cerrar">&times;</button>
-        <p class="poi-card__eyebrow">Punto A · Patio</p>
-        <h2 class="poi-card__title" id="poi-a-title">Primera prueba</h2>
-        <p class="poi-card__body">
-          ¡Feliz cumpleaños! Bienvenido a tu búsqueda del tesoro por Cerro Encinas.
-          Cada punto del mapa esconde una prueba; supéralas todas y darás con tu regalo.
-          Empezamos aquí, en el patio.
-          <br><br>
-          <span class="ph">[Aquí irá el texto / acertijo del primer punto, que decidiremos ahora.]</span>
-        </p>
-        <button class="poi-card__cta" data-close>Entendido</button>
+
+        <!-- Paso A1 · briefing -->
+        <div class="poi-step" data-step="a1">
+          <p class="poi-card__eyebrow">Punto A · Patio</p>
+          <h2 class="poi-card__title" id="poi-a-title">Primera prueba</h2>
+          <p class="poi-card__body">
+            Bienvenido a la misión de reconocimiento de la finca Cerro Encinas.
+            Cada punto del mapa esconde una prueba; supéralas todas para completar el reconocimiento y al final encontrarás la recompensa.
+            Empezamos aquí, en el patio.
+            <br><br>
+            <span class="ph">Para revelar la posición de la siguiente prueba, deberás responder a una pregunta.</span>
+          </p>
+          <button class="poi-card__cta" data-goto="a2">Entendido</button>
+        </div>
+
+        <!-- Paso A2 · pregunta -->
+        <div class="poi-step" data-step="a2" hidden>
+          <p class="poi-card__eyebrow">Punto A · Patio</p>
+          <h2 class="poi-card__title">La pregunta</h2>
+          <p class="poi-card__body">
+            ¿Cuál fue la cantidad de regalos recibidos por ti y tus compañeros de misión en el cumpleaños conjunto celebrado en 2019?
+          </p>
+          <div class="poi-answer">
+            <input class="poi-input" id="answer-a" type="number" inputmode="numeric" placeholder="Nº de regalos" aria-label="Tu respuesta">
+            <button class="poi-check" id="check-a">Validar</button>
+          </div>
+          <p class="poi-hint" id="hint-a" hidden></p>
+        </div>
+
+        <!-- Paso A3 · acierto de la 1ª pregunta + 2ª prueba (código) -->
+        <div class="poi-step" data-step="a3" hidden>
+          <svg class="poi-success-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
+          <p class="poi-card__eyebrow">Punto A · Patio</p>
+          <h2 class="poi-card__title">¡Correcto!</h2>
+          <p class="poi-card__body">
+            Para la siguiente prueba, deberás buscar dentro de la obra de ingeniería magistral en la que tú y tu compañero habéis estado trabajando duramente durante estas últimas semanas...
+          </p>
+          <div class="poi-answer">
+            <input class="poi-input poi-input--code" id="code-a" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="Código" aria-label="Introduce el código">
+            <button class="poi-check" id="check-code-a">Validar</button>
+          </div>
+          <p class="poi-hint" id="feedback-code-a" hidden></p>
+          <button class="poi-hintbtn" id="hintbtn-a" type="button">Pista</button>
+          <p class="poi-hint poi-hint--clue" id="hint-code-a" hidden>«Un artilugio caliente, pero imprescindible en las quedadas de verano.»</p>
+        </div>
+
+        <!-- Paso A4 · Punto A completado -->
+        <div class="poi-step" data-step="a4" hidden>
+          <svg class="poi-success-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
+          <p class="poi-card__eyebrow">Punto A · Superado</p>
+          <h2 class="poi-card__title">¡Punto A completado!</h2>
+          <p class="poi-card__body">
+            Reconocimiento del patio finalizado, agente.
+          </p>
+          <button class="poi-card__cta" id="finish-a">Continuar</button>
+        </div>
       </div>
     </div>
+    <!-- Overlay del Punto B (contenido por definir) -->
+    <div class="poi-overlay" id="overlay-b" hidden>
+      <div class="poi-overlay__backdrop" data-close></div>
+      <div class="poi-card" role="dialog" aria-modal="true" aria-labelledby="poi-b-title">
+        <button class="poi-card__close" data-close aria-label="Cerrar">&times;</button>
+        <p class="poi-card__eyebrow">Punto B · Terreno bajo el árbol</p>
+        <h2 class="poi-card__title" id="poi-b-title">Segunda prueba</h2>
+        <p class="poi-card__body">
+          <span class="ph">[Contenido del Punto B por definir: aquí montaremos el desafío de la zona del árbol.]</span>
+        </p>
+        <button class="poi-card__cta" data-close>Cerrar</button>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -287,13 +386,12 @@
       var intro    = document.getElementById('overlay-intro');
       var introBtn = document.getElementById('intro-start');
       var marker   = document.getElementById('poi-a');
-      var overlay  = document.getElementById('overlay-a');
+      var frame    = document.querySelector('.map-frame');
+      var fsBtn    = document.getElementById('fs-btn');
 
       introBtn.addEventListener('click', function(){ intro.hidden = true; });
 
       // --- Pantalla completa / modo inmersivo ---
-      var frame = document.querySelector('.map-frame');
-      var fsBtn = document.getElementById('fs-btn');
       function inNativeFs(){
         return document.fullscreenElement === frame || document.webkitFullscreenElement === frame;
       }
@@ -322,21 +420,104 @@
       }
       fsBtn.addEventListener('click', toggleFs);
 
-      function open(){ overlay.hidden = false; }
-      function close(){ overlay.hidden = true; marker.focus(); }
-      marker.addEventListener('click', open);
+      // Pantalla completa automática al iniciar (móvil/tablet)
+      if(window.matchMedia('(pointer:coarse)').matches || window.matchMedia('(max-width:820px)').matches){
+        enterImmersive();
+      }
+
+      // --- Flujo del Punto A ---
+      var overlayA  = document.getElementById('overlay-a');
+      var steps = {};
+      overlayA.querySelectorAll('.poi-step').forEach(function(s){ steps[s.getAttribute('data-step')] = s; });
+      var order = ['a1','a2','a3','a4'];
+      var reachedA = 'a1';
+
+      var answerInp = document.getElementById('answer-a');
+      var hintEl    = document.getElementById('hint-a');
+      var CORRECT_A = 0; // respuesta correcta (nº de regalos)
+
+      var codeInp      = document.getElementById('code-a');
+      var codeFeedback = document.getElementById('feedback-code-a');
+      var codeHint     = document.getElementById('hint-code-a');
+      var CODE_A = 'BARBACOA'; // código de la 2ª prueba
+
+      function showStep(id){
+        Object.keys(steps).forEach(function(k){ steps[k].hidden = (k !== id); });
+        if(id === 'a2'){ setTimeout(function(){ answerInp.focus(); }, 60); }
+        if(id === 'a3'){ setTimeout(function(){ codeInp.focus(); }, 60); }
+      }
+      function advanceTo(id){
+        if(order.indexOf(id) > order.indexOf(reachedA)){ reachedA = id; }
+        showStep(id);
+      }
+      function openA(){ overlayA.hidden = false; showStep(reachedA); }
+      function closeA(){ overlayA.hidden = true; marker.focus(); }
+
+      function validateA(){
+        var raw = answerInp.value.trim();
+        if(raw === ''){ hintEl.textContent = 'Escribe un número para validar.'; hintEl.hidden = false; return; }
+        var val = Number(raw);
+        if(!isNaN(val) && val === CORRECT_A){
+          hintEl.hidden = true;
+          advanceTo('a3');
+        } else {
+          hintEl.textContent = 'No es correcto. Pista: aquel año la cosecha de regalos fue… más bien escasa. Vuelve a contarlos.';
+          hintEl.hidden = false;
+        }
+      }
+
+      function validateCode(){
+        var raw = codeInp.value.trim().toUpperCase();
+        if(raw === ''){ codeFeedback.textContent = 'Escribe el código para validar.'; codeFeedback.hidden = false; return; }
+        if(raw === CODE_A){
+          codeFeedback.hidden = true;
+          advanceTo('a4');
+          // revealNext('b');  // <- gancho para desbloquear el siguiente punto cuando lo creemos
+        } else {
+          codeFeedback.textContent = 'Código incorrecto. Si te atascas, pulsa «Pista».';
+          codeFeedback.hidden = false;
+        }
+      }
+
+      marker.addEventListener('click', openA);
       marker.addEventListener('keydown', function(e){
-        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openA(); }
       });
-      overlay.querySelectorAll('[data-close]').forEach(function(el){
-        el.addEventListener('click', close);
+      overlayA.querySelectorAll('[data-goto]').forEach(function(b){
+        b.addEventListener('click', function(){ advanceTo(b.getAttribute('data-goto')); });
+      });
+      overlayA.querySelectorAll('[data-close]').forEach(function(el){
+        el.addEventListener('click', closeA);
+      });
+      document.getElementById('check-a').addEventListener('click', validateA);
+      answerInp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); validateA(); } });
+      document.getElementById('check-code-a').addEventListener('click', validateCode);
+      codeInp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); validateCode(); } });
+      document.getElementById('hintbtn-a').addEventListener('click', function(){ codeHint.hidden = !codeHint.hidden; });
+
+      // --- Punto B (terreno bajo el árbol) ---
+      var poiB     = document.getElementById('poi-b');
+      var overlayB = document.getElementById('overlay-b');
+      function openB(){ overlayB.hidden = false; }
+      function closeB(){ overlayB.hidden = true; poiB.focus(); }
+      poiB.addEventListener('click', openB);
+      poiB.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openB(); } });
+      overlayB.querySelectorAll('[data-close]').forEach(function(el){ el.addEventListener('click', closeB); });
+
+      // Al completar A: volver al mapa, apagar A y revelar B
+      document.getElementById('finish-a').addEventListener('click', function(){
+        marker.classList.add('is-done');
+        poiB.classList.remove('is-hidden');
+        closeA();
       });
 
+      // --- Escape: cierra lo que esté abierto, de arriba a abajo ---
       document.addEventListener('keydown', function(e){
         if(e.key !== 'Escape') return;
-        if(frame.classList.contains('is-immersive')){ exitImmersive(); }
+        if(!overlayB.hidden){ closeB(); }
+        else if(!overlayA.hidden){ closeA(); }
         else if(!intro.hidden){ intro.hidden = true; }
-        else if(!overlay.hidden){ close(); }
+        else if(frame.classList.contains('is-immersive')){ exitImmersive(); }
       });
     })();
   </script>
