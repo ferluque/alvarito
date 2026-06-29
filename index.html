@@ -24,7 +24,6 @@
   .title-block .rule{margin-top:10px;margin-left:4px;width:64px;height:3px;background:var(--ink);opacity:.85;}
   @media (max-width:480px){.title-block{top:16px;left:18px;}}
 
-  /* ---- Marcador de punto de interés ---- */
   .poi{cursor:pointer;outline:none;}
   .poi .poi-core{transition:transform .15s ease;transform-box:fill-box;transform-origin:center;}
   .poi:hover .poi-core,.poi:focus-visible .poi-core{transform:scale(1.12);}
@@ -35,7 +34,6 @@
   .poi.is-done .poi-ring-static{fill:#46505a;stroke:#8a949c;}
   .poi.is-done .poi-letter{fill:#cfd6da;}
 
-  /* ---- Overlay ---- */
   .poi-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;}
   .poi-overlay[hidden]{display:none;}
   .poi-overlay__backdrop{position:absolute;inset:0;background:rgba(5,9,12,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);animation:fade .2s ease;}
@@ -54,7 +52,6 @@
   @keyframes rise{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){.poi-pulse{display:none}}
 
-  /* ---- Pasos dentro de una prueba ---- */
   .poi-step[hidden]{display:none;}
   .poi-answer{display:flex;gap:10px;margin-top:22px;}
   .poi-input{flex:1;min-width:0;font-family:'Oswald',sans-serif;font-size:18px;font-weight:500;color:var(--ink);
@@ -76,7 +73,6 @@
   .poi-hintbtn:hover{background:rgba(240,180,41,.1);}
   .poi-hint--clue{color:var(--poi);font-style:italic;}
 
-  /* ---- Pantalla completa ---- */
   .fs-btn{position:absolute;top:22px;right:20px;z-index:6;display:inline-flex;align-items:center;gap:8px;
     font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
     color:var(--ink);background:rgba(13,20,26,.62);border:1px solid rgba(205,221,230,.22);border-radius:8px;
@@ -91,13 +87,11 @@
   .map-frame.is-immersive .fs-btn .ico-exit,
   .map-frame:fullscreen .fs-btn .ico-exit,
   .map-frame:-webkit-full-screen .fs-btn .ico-exit{display:block;}
-
   .map-frame.is-immersive{position:fixed;inset:0;width:100vw;height:100vh;max-width:none;aspect-ratio:auto;border-radius:0;z-index:50;}
   .map-frame:fullscreen{width:100vw;height:100vh;max-width:none;aspect-ratio:auto;border-radius:0;}
   .map-frame:-webkit-full-screen{width:100vw;height:100vh;max-width:none;aspect-ratio:auto;border-radius:0;}
   html.immersive-lock,html.immersive-lock body{overflow:hidden;height:100%;}
 
-  /* ---- Aviso de girar el móvil ---- */
   .rotate-hint{display:none;}
   @media (orientation:portrait){
     .map-frame.is-immersive .rotate-hint,
@@ -109,8 +103,6 @@
   .rotate-hint svg{width:52px;height:52px;color:var(--poi);animation:rot 2.6s ease-in-out infinite;}
   .rotate-hint p{font-family:'Oswald',sans-serif;font-weight:300;font-size:15px;letter-spacing:.03em;color:#c4ccd2;max-width:230px;line-height:1.5;}
   @keyframes rot{0%,42%{transform:rotate(0)}58%,100%{transform:rotate(-90deg)}}
-
-  /* Nota de girar dentro de la intro (solo en vertical) */
   .intro-rotate{display:none;}
   @media (orientation:portrait){
     .intro-rotate{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:20px;
@@ -147,11 +139,8 @@
         <radialGradient id="oceanGrad" cx="44%" cy="42%" r="72%"><stop offset="0%" stop-color="#22323f"/><stop offset="60%" stop-color="var(--ocean)"/><stop offset="100%" stop-color="var(--ocean-deep)"/></radialGradient>
         <linearGradient id="poolGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--pool-b)"/><stop offset="100%" stop-color="var(--pool-a)"/></linearGradient>
         <radialGradient id="poiGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--poi)" stop-opacity="0.5"/><stop offset="100%" stop-color="var(--poi)" stop-opacity="0"/></radialGradient>
-
         <path id="parcel" d="M 110,118 L 1380,100 Q 1404,100 1404,124 L 1410,866 Q 1410,884 1392,884 L 116,888 Q 100,888 100,872 L 100,134 Q 100,118 110,118 Z"/>
         <clipPath id="landClip"><use href="#parcel"/></clipPath>
-
-        <!-- coche 2D vista cenital -->
         <symbol id="car" viewBox="0 0 44 80">
           <rect x="1" y="13" width="6" height="15" rx="2" fill="#14181c"/>
           <rect x="37" y="13" width="6" height="15" rx="2" fill="#14181c"/>
@@ -164,34 +153,24 @@
         </symbol>
       </defs>
 
-      <!-- 1 · Océano -->
       <rect x="0" y="0" width="1538" height="1024" fill="url(#oceanGrad)"/>
-
-      <!-- 2 · Halo de costa -->
       <use href="#parcel" fill="none" stroke="var(--foam)" stroke-width="54" opacity="0.22" filter="url(#coastGlowSoft)"/>
       <use href="#parcel" fill="none" stroke="var(--foam)" stroke-width="30" opacity="0.5"  filter="url(#coastGlow)"/>
       <use href="#parcel" fill="none" stroke="#eaf3f7"     stroke-width="10" opacity="0.85" filter="url(#coastGlow)"/>
-
-      <!-- 3 · Tierra -->
       <use href="#parcel" fill="var(--land)"/>
       <use href="#parcel" fill="#13181d" opacity="0.55"/>
-
-      <!-- 4 · Textura -->
       <g clip-path="url(#landClip)"><rect x="0" y="0" width="1538" height="1024" filter="url(#grain)" opacity="0.05"/></g>
 
-      <!-- 5 · Camino (según boceto) -->
       <g id="paths" clip-path="url(#landClip)" fill="#222a32">
         <rect x="107" y="266" width="373" height="245" rx="8"/>
         <rect x="349" y="500" width="131" height="249" rx="8"/>
         <rect x="468" y="672" width="289" height="77" rx="8"/>
       </g>
 
-      <!-- 6 · Muro perimetral (con hueco de acceso a la izquierda) -->
       <g id="perimeter" fill="none" stroke="var(--wall)" stroke-linecap="round" opacity="0.5">
         <path d="M 100,470 L 100,872 Q 100,888 116,888 L 1392,884 Q 1410,884 1410,866 L 1404,124 Q 1404,100 1380,100 L 110,118 Q 100,118 100,134 L 100,300" stroke-width="4"/>
       </g>
 
-      <!-- 7 · Vegetación -->
       <g id="vegetation">
         <g opacity="0.95">
           <circle cx="1258" cy="748" r="118" fill="#0c130d"/>
@@ -203,7 +182,6 @@
           <circle cx="845" cy="685" r="26"/>
           <circle cx="856" cy="673" r="14"/>
         </g>
-        <!-- árbol nuevo (abajo izquierda) -->
         <g opacity="0.95">
           <circle cx="338" cy="810" r="55" fill="#0c130d"/>
           <circle cx="316" cy="794" r="28" fill="#0f1810"/>
@@ -212,7 +190,6 @@
         </g>
       </g>
 
-      <!-- 8 · Chalet -->
       <g id="buildings">
         <rect x="505" y="158" width="270" height="352" fill="#222a32" stroke="#465360" stroke-width="3"/>
         <g stroke="#566472" stroke-width="2" opacity="0.7" fill="none">
@@ -221,13 +198,10 @@
           <line x1="580" y1="262" x2="580" y2="510"/>
           <line x1="640" y1="262" x2="640" y2="510"/>
         </g>
-        <!-- 8.1 Patio -->
         <rect x="505" y="510" width="270" height="140" fill="#171d23" stroke="#465360" stroke-width="3"/>
-        <!-- 8.2 Cocina -->
         <rect x="505" y="510" width="75" height="140" fill="#222a32" stroke="#3c4751" stroke-width="2"/>
       </g>
 
-      <!-- 9 · Parking (coches 2D alineados) -->
       <g id="parking">
         <use href="#car" x="168" y="525" width="40" height="73" transform="rotate(90 188 561.5)"/>
         <use href="#car" x="168" y="598" width="40" height="73" transform="rotate(90 188 634.5)"/>
@@ -235,12 +209,10 @@
         <use href="#car" x="168" y="744" width="40" height="73" transform="rotate(90 188 780.5)"/>
       </g>
 
-      <!-- 10 · Muro interior junto a la piscina -->
       <g id="wall-pool" fill="none" stroke="#c2ccd2" stroke-width="6" stroke-linecap="round" opacity="0.85">
         <path d="M 947,190 L 1114,190 L 1114,648 L 947,648"/>
       </g>
 
-      <!-- 11 · Piscina (acento de color) -->
       <g id="pool">
         <rect x="925" y="252" width="153" height="258" rx="8" fill="#dfe7ec" opacity="0.9"/>
         <rect x="934" y="262" width="135" height="238" rx="5" fill="url(#poolGrad)"/>
@@ -248,10 +220,9 @@
         <path d="M 945,286 q 58,16 113,0" stroke="#cdf3ff" stroke-width="2" fill="none" opacity="0.4"/>
       </g>
 
-      <!-- 12 · Marcadores de las pruebas -->
       <g id="markers">
         <!-- Punto A · Patio -->
-        <g id="poi-a" class="poi" tabindex="0" role="button" aria-label="Punto A: Patio. Abrir prueba.">
+        <g id="poi-a" class="poi" tabindex="0" role="button" aria-label="Punto A: Patio.">
           <circle class="poi-glow" cx="678" cy="580" r="46" fill="url(#poiGlow)"/>
           <circle class="poi-pulse" cx="678" cy="580" r="25" fill="none" stroke="var(--poi)" stroke-width="2.5">
             <animate attributeName="r" values="25;44;25" dur="2.6s" repeatCount="indefinite"/>
@@ -263,8 +234,8 @@
           </g>
         </g>
 
-        <!-- Punto B · Terreno bajo el árbol (oculto hasta completar A) -->
-        <g id="poi-b" class="poi is-hidden" tabindex="0" role="button" aria-label="Punto B: terreno bajo el árbol. Abrir prueba.">
+        <!-- Punto B · Árbol abajo derecha (oculto hasta completar A) -->
+        <g id="poi-b" class="poi is-hidden" tabindex="0" role="button" aria-label="Punto B: terreno bajo el árbol.">
           <circle class="poi-glow" cx="1258" cy="748" r="46" fill="url(#poiGlow)"/>
           <circle class="poi-pulse" cx="1258" cy="748" r="25" fill="none" stroke="var(--poi)" stroke-width="2.5">
             <animate attributeName="r" values="25;44;25" dur="2.6s" repeatCount="indefinite"/>
@@ -275,13 +246,26 @@
             <text x="1258" y="750" class="poi-letter">B</text>
           </g>
         </g>
+
+        <!-- Punto C · Cocina (oculto hasta completar B) -->
+        <g id="poi-c" class="poi is-hidden" tabindex="0" role="button" aria-label="Punto C: cocina.">
+          <circle class="poi-glow" cx="542" cy="580" r="46" fill="url(#poiGlow)"/>
+          <circle class="poi-pulse" cx="542" cy="580" r="25" fill="none" stroke="var(--poi)" stroke-width="2.5">
+            <animate attributeName="r" values="25;44;25" dur="2.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.75;0;0.75" dur="2.6s" repeatCount="indefinite"/>
+          </circle>
+          <g class="poi-core">
+            <circle class="poi-ring-static" cx="542" cy="580" r="25" fill="var(--poi)" stroke="#fff7e6" stroke-width="2.5"/>
+            <text x="542" y="582" class="poi-letter">C</text>
+          </g>
+        </g>
       </g>
     </svg>
 
-    <!-- Overlay de bienvenida (se abre al cargar) -->
+    <!-- OVERLAY INTRO -->
     <div class="poi-overlay" id="overlay-intro">
       <div class="poi-overlay__backdrop"></div>
-      <div class="poi-card poi-card--intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+      <div class="poi-card" role="dialog" aria-modal="true" aria-labelledby="intro-title">
         <p class="poi-card__eyebrow">Última misión de campo</p>
         <h2 class="poi-card__title" id="intro-title">Operación<br>Cerro Encinas</h2>
         <p class="poi-card__body">
@@ -302,13 +286,12 @@
       </div>
     </div>
 
-    <!-- Overlay del Punto A (3 pasos: briefing -> pregunta -> acierto) -->
+    <!-- OVERLAY PUNTO A -->
     <div class="poi-overlay" id="overlay-a" hidden>
-      <div class="poi-overlay__backdrop" data-close></div>
+      <div class="poi-overlay__backdrop" data-close="a"></div>
       <div class="poi-card" role="dialog" aria-modal="true" aria-labelledby="poi-a-title">
-        <button class="poi-card__close" data-close aria-label="Cerrar">&times;</button>
+        <button class="poi-card__close" data-close="a" aria-label="Cerrar">&times;</button>
 
-        <!-- Paso A1 · briefing -->
         <div class="poi-step" data-step="a1">
           <p class="poi-card__eyebrow">Punto A · Patio</p>
           <h2 class="poi-card__title" id="poi-a-title">Primera prueba</h2>
@@ -322,7 +305,6 @@
           <button class="poi-card__cta" data-goto="a2">Entendido</button>
         </div>
 
-        <!-- Paso A2 · pregunta -->
         <div class="poi-step" data-step="a2" hidden>
           <p class="poi-card__eyebrow">Punto A · Patio</p>
           <h2 class="poi-card__title">La pregunta</h2>
@@ -336,13 +318,12 @@
           <p class="poi-hint" id="hint-a" hidden></p>
         </div>
 
-        <!-- Paso A3 · acierto de la 1ª pregunta + 2ª prueba (código) -->
         <div class="poi-step" data-step="a3" hidden>
           <svg class="poi-success-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
           <p class="poi-card__eyebrow">Punto A · Patio</p>
           <h2 class="poi-card__title">¡Correcto!</h2>
           <p class="poi-card__body">
-            Para la siguiente prueba, deberás buscar dentro de la obra de ingeniería magistral en la que tú y tu compañero habéis estado trabajando duramente durante estas últimas semanas...
+            Para la siguiente prueba, deberás buscar dentro de la obra de ingeniería magistral en la que tú y tu compañero habéis estado trabajando duramente durante estas últimas semanas... Dentro encontrarás el código para revelar la siguiente ubicación...
           </p>
           <div class="poi-answer">
             <input class="poi-input poi-input--code" id="code-a" type="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="Código" aria-label="Introduce el código">
@@ -353,173 +334,182 @@
           <p class="poi-hint poi-hint--clue" id="hint-code-a" hidden>«Un artilugio caliente, pero imprescindible en las quedadas de verano.»</p>
         </div>
 
-        <!-- Paso A4 · Punto A completado -->
         <div class="poi-step" data-step="a4" hidden>
           <svg class="poi-success-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
           <p class="poi-card__eyebrow">Punto A · Superado</p>
           <h2 class="poi-card__title">¡Punto A completado!</h2>
-          <p class="poi-card__body">
-            Reconocimiento del patio finalizado, agente.
-          </p>
+          <p class="poi-card__body">Reconocimiento del patio finalizado, agente.</p>
           <button class="poi-card__cta" id="finish-a">Continuar</button>
         </div>
       </div>
     </div>
-    <!-- Overlay del Punto B (contenido por definir) -->
+
+    <!-- OVERLAY PUNTO B -->
     <div class="poi-overlay" id="overlay-b" hidden>
-      <div class="poi-overlay__backdrop" data-close></div>
+      <div class="poi-overlay__backdrop" data-close="b"></div>
       <div class="poi-card" role="dialog" aria-modal="true" aria-labelledby="poi-b-title">
-        <button class="poi-card__close" data-close aria-label="Cerrar">&times;</button>
-        <p class="poi-card__eyebrow">Punto B · Terreno bajo el árbol</p>
-        <h2 class="poi-card__title" id="poi-b-title">Segunda prueba</h2>
+        <button class="poi-card__close" data-close="b" aria-label="Cerrar">&times;</button>
+
+        <!-- B1 · código pacoalcaide → salta directamente a B2 (superado) -->
+        <div class="poi-step" data-step="b1">
+          <p class="poi-card__eyebrow">Punto B · Terreno bajo el árbol</p>
+          <h2 class="poi-card__title" id="poi-b-title">Segunda prueba</h2>
+          <p class="poi-card__body">
+            <span class="ph">Has conseguido superar la primera prueba, pero, ¿estás preparado para mirar al pasado?</span>
+            <br><br>
+            Junto a las raíces de este árbol encontrarás la pista clave... Quizá necesites realizar alguna búsqueda para encontrar el código exacto...
+          </p>
+          <div class="poi-answer">
+            <input class="poi-input poi-input--code" id="code-b1" type="text" autocapitalize="none" autocomplete="off" spellcheck="false" placeholder="Contraseña" aria-label="Contraseña">
+            <button class="poi-check" id="check-code-b1">Validar</button>
+          </div>
+          <p class="poi-hint" id="feedback-b1" hidden></p>
+        </div>
+
+        <!-- B2 · superado, revela C -->
+        <div class="poi-step" data-step="b2" hidden>
+          <svg class="poi-success-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
+          <p class="poi-card__eyebrow">Punto B · Superado</p>
+          <h2 class="poi-card__title">¡Punto B completado!</h2>
+          <p class="poi-card__body">
+            Terreno reconocido, agente. La siguiente posición ha sido desbloqueada en el mapa.
+          </p>
+          <button class="poi-card__cta" id="finish-b">Continuar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERLAY PUNTO C (placeholder) -->
+    <div class="poi-overlay" id="overlay-c" hidden>
+      <div class="poi-overlay__backdrop" data-close="c"></div>
+      <div class="poi-card" role="dialog" aria-modal="true" aria-labelledby="poi-c-title">
+        <button class="poi-card__close" data-close="c" aria-label="Cerrar">&times;</button>
+        <p class="poi-card__eyebrow">Punto C · Cocina</p>
+        <h2 class="poi-card__title" id="poi-c-title">Tercera prueba</h2>
         <p class="poi-card__body">
-          <span class="ph">[Contenido del Punto B por definir: aquí montaremos el desafío de la zona del árbol.]</span>
+          <span class="ph">Aquí me he quedado xd. Acepto sugerencias de pruebas o cosas que tenga que hacer para adivinar que después tiene que ir a la piscina a encontrar el último código o algo así.</span>
         </p>
-        <button class="poi-card__cta" data-close>Cerrar</button>
+        <button class="poi-card__cta" data-close="c">Cerrar</button>
       </div>
     </div>
 
   </div>
 
   <script>
-    (function(){
-      var intro    = document.getElementById('overlay-intro');
-      var introBtn = document.getElementById('intro-start');
-      var marker   = document.getElementById('poi-a');
-      var frame    = document.querySelector('.map-frame');
-      var fsBtn    = document.getElementById('fs-btn');
+  (function(){
+    var intro    = document.getElementById('overlay-intro');
+    var introBtn = document.getElementById('intro-start');
+    var frame    = document.querySelector('.map-frame');
+    var fsBtn    = document.getElementById('fs-btn');
 
-      introBtn.addEventListener('click', function(){ intro.hidden = true; });
+    introBtn.addEventListener('click', function(){ intro.hidden = true; });
 
-      // --- Pantalla completa / modo inmersivo ---
-      function inNativeFs(){
-        return document.fullscreenElement === frame || document.webkitFullscreenElement === frame;
-      }
-      function enterImmersive(){
-        frame.classList.add('is-immersive');
-        document.documentElement.classList.add('immersive-lock');
-      }
-      function exitImmersive(){
-        frame.classList.remove('is-immersive');
-        document.documentElement.classList.remove('immersive-lock');
-      }
-      function toggleFs(){
-        var req = frame.requestFullscreen || frame.webkitRequestFullscreen;
-        if(req){
-          if(inNativeFs()){
-            (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-          } else {
-            var p = req.call(frame);
-            if(p && p.catch){ p.catch(enterImmersive); }
-          }
-        } else if(frame.classList.contains('is-immersive')){
-          exitImmersive();
-        } else {
-          enterImmersive();
-        }
-      }
-      fsBtn.addEventListener('click', toggleFs);
+    function inNativeFs(){ return document.fullscreenElement===frame||document.webkitFullscreenElement===frame; }
+    function enterImmersive(){ frame.classList.add('is-immersive'); document.documentElement.classList.add('immersive-lock'); }
+    function exitImmersive(){ frame.classList.remove('is-immersive'); document.documentElement.classList.remove('immersive-lock'); }
+    function toggleFs(){
+      var req=frame.requestFullscreen||frame.webkitRequestFullscreen;
+      if(req){
+        if(inNativeFs()){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }
+        else{ var p=req.call(frame); if(p&&p.catch){ p.catch(enterImmersive); } }
+      } else if(frame.classList.contains('is-immersive')){ exitImmersive(); }
+      else{ enterImmersive(); }
+    }
+    fsBtn.addEventListener('click', toggleFs);
+    if(window.matchMedia('(pointer:coarse)').matches||window.matchMedia('(max-width:820px)').matches){ enterImmersive(); }
 
-      // Pantalla completa automática al iniciar (móvil/tablet)
-      if(window.matchMedia('(pointer:coarse)').matches || window.matchMedia('(max-width:820px)').matches){
-        enterImmersive();
-      }
+    function makeStepMachine(overlayEl){
+      var steps={};
+      overlayEl.querySelectorAll('.poi-step').forEach(function(s){ steps[s.getAttribute('data-step')]=s; });
+      var order=Object.keys(steps);
+      var reached=order[0];
+      function show(id){ order.forEach(function(k){ steps[k].hidden=(k!==id); }); }
+      function advance(id){ if(order.indexOf(id)>order.indexOf(reached)){reached=id;} show(id); }
+      function reopen(){ show(reached); }
+      return{show:show,advance:advance,reopen:reopen};
+    }
 
-      // --- Flujo del Punto A ---
-      var overlayA  = document.getElementById('overlay-a');
-      var steps = {};
-      overlayA.querySelectorAll('.poi-step').forEach(function(s){ steps[s.getAttribute('data-step')] = s; });
-      var order = ['a1','a2','a3','a4'];
-      var reachedA = 'a1';
+    /* ---- PUNTO A ---- */
+    var poiA=document.getElementById('poi-a'), overlayA=document.getElementById('overlay-a'), machA=makeStepMachine(overlayA);
+    var ansInp=document.getElementById('answer-a'), hintA=document.getElementById('hint-a');
+    var codeA=document.getElementById('code-a'), fbCodeA=document.getElementById('feedback-code-a'), hintCodeA=document.getElementById('hint-code-a');
+    var CORRECT_A=0, CODE_A='BARBACOA';
 
-      var answerInp = document.getElementById('answer-a');
-      var hintEl    = document.getElementById('hint-a');
-      var CORRECT_A = 0; // respuesta correcta (nº de regalos)
+    function openA(){ overlayA.hidden=false; machA.reopen(); }
+    function closeA(){ overlayA.hidden=true; poiA.focus(); }
 
-      var codeInp      = document.getElementById('code-a');
-      var codeFeedback = document.getElementById('feedback-code-a');
-      var codeHint     = document.getElementById('hint-code-a');
-      var CODE_A = 'BARBACOA'; // código de la 2ª prueba
+    function validateNumA(){
+      var v=ansInp.value.trim();
+      if(v===''){ hintA.textContent='Escribe un número para validar.'; hintA.hidden=false; return; }
+      if(!isNaN(Number(v))&&Number(v)===CORRECT_A){ hintA.hidden=true; machA.advance('a3'); setTimeout(function(){codeA.focus();},60); }
+      else{ hintA.textContent='No es correcto. Pista: aquel año la cosecha de regalos fue… más bien escasa.'; hintA.hidden=false; }
+    }
+    function validateCodeA(){
+      var v=codeA.value.trim().toUpperCase();
+      if(v===''){ fbCodeA.textContent='Escribe el código para validar.'; fbCodeA.hidden=false; return; }
+      if(v===CODE_A){ fbCodeA.hidden=true; machA.advance('a4'); }
+      else{ fbCodeA.textContent='Código incorrecto. Si te atascas, pulsa «Pista».'; fbCodeA.hidden=false; }
+    }
 
-      function showStep(id){
-        Object.keys(steps).forEach(function(k){ steps[k].hidden = (k !== id); });
-        if(id === 'a2'){ setTimeout(function(){ answerInp.focus(); }, 60); }
-        if(id === 'a3'){ setTimeout(function(){ codeInp.focus(); }, 60); }
-      }
-      function advanceTo(id){
-        if(order.indexOf(id) > order.indexOf(reachedA)){ reachedA = id; }
-        showStep(id);
-      }
-      function openA(){ overlayA.hidden = false; showStep(reachedA); }
-      function closeA(){ overlayA.hidden = true; marker.focus(); }
+    poiA.addEventListener('click',openA);
+    poiA.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openA();}});
+    overlayA.querySelectorAll('[data-close="a"]').forEach(function(el){el.addEventListener('click',closeA);});
+    overlayA.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){machA.advance(b.getAttribute('data-goto'));});});
+    document.getElementById('check-a').addEventListener('click',validateNumA);
+    ansInp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();validateNumA();}});
+    document.getElementById('check-code-a').addEventListener('click',validateCodeA);
+    codeA.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();validateCodeA();}});
+    document.getElementById('hintbtn-a').addEventListener('click',function(){hintCodeA.hidden=!hintCodeA.hidden;});
+    document.getElementById('finish-a').addEventListener('click',function(){
+      poiA.classList.add('is-done');
+      document.getElementById('poi-b').classList.remove('is-hidden');
+      closeA();
+    });
 
-      function validateA(){
-        var raw = answerInp.value.trim();
-        if(raw === ''){ hintEl.textContent = 'Escribe un número para validar.'; hintEl.hidden = false; return; }
-        var val = Number(raw);
-        if(!isNaN(val) && val === CORRECT_A){
-          hintEl.hidden = true;
-          advanceTo('a3');
-        } else {
-          hintEl.textContent = 'No es correcto. Pista: aquel año la cosecha de regalos fue… más bien escasa. Vuelve a contarlos.';
-          hintEl.hidden = false;
-        }
-      }
+    /* ---- PUNTO B ---- */
+    var poiB=document.getElementById('poi-b'), overlayB=document.getElementById('overlay-b'), machB=makeStepMachine(overlayB);
+    var codeB1=document.getElementById('code-b1'), fbB1=document.getElementById('feedback-b1');
+    var CODES_B1=['PACOALCAIDE1593','@PACOALCAIDE1593'];
 
-      function validateCode(){
-        var raw = codeInp.value.trim().toUpperCase();
-        if(raw === ''){ codeFeedback.textContent = 'Escribe el código para validar.'; codeFeedback.hidden = false; return; }
-        if(raw === CODE_A){
-          codeFeedback.hidden = true;
-          advanceTo('a4');
-          // revealNext('b');  // <- gancho para desbloquear el siguiente punto cuando lo creemos
-        } else {
-          codeFeedback.textContent = 'Código incorrecto. Si te atascas, pulsa «Pista».';
-          codeFeedback.hidden = false;
-        }
-      }
+    function openB(){ overlayB.hidden=false; machB.reopen(); }
+    function closeB(){ overlayB.hidden=true; poiB.focus(); }
 
-      marker.addEventListener('click', openA);
-      marker.addEventListener('keydown', function(e){
-        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openA(); }
-      });
-      overlayA.querySelectorAll('[data-goto]').forEach(function(b){
-        b.addEventListener('click', function(){ advanceTo(b.getAttribute('data-goto')); });
-      });
-      overlayA.querySelectorAll('[data-close]').forEach(function(el){
-        el.addEventListener('click', closeA);
-      });
-      document.getElementById('check-a').addEventListener('click', validateA);
-      answerInp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); validateA(); } });
-      document.getElementById('check-code-a').addEventListener('click', validateCode);
-      codeInp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); validateCode(); } });
-      document.getElementById('hintbtn-a').addEventListener('click', function(){ codeHint.hidden = !codeHint.hidden; });
+    function validateB1(){
+      var v=codeB1.value.trim().toUpperCase();
+      if(v===''){ fbB1.textContent='Escribe la contraseña para validar.'; fbB1.hidden=false; return; }
+      if(CODES_B1.indexOf(v)!==-1){ fbB1.hidden=true; machB.advance('b2'); }
+      else{ fbB1.textContent='Contraseña incorrecta. Busca bien entre las raíces.'; fbB1.hidden=false; }
+    }
 
-      // --- Punto B (terreno bajo el árbol) ---
-      var poiB     = document.getElementById('poi-b');
-      var overlayB = document.getElementById('overlay-b');
-      function openB(){ overlayB.hidden = false; }
-      function closeB(){ overlayB.hidden = true; poiB.focus(); }
-      poiB.addEventListener('click', openB);
-      poiB.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openB(); } });
-      overlayB.querySelectorAll('[data-close]').forEach(function(el){ el.addEventListener('click', closeB); });
+    poiB.addEventListener('click',openB);
+    poiB.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openB();}});
+    overlayB.querySelectorAll('[data-close="b"]').forEach(function(el){el.addEventListener('click',closeB);});
+    document.getElementById('check-code-b1').addEventListener('click',validateB1);
+    codeB1.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();validateB1();}});
+    document.getElementById('finish-b').addEventListener('click',function(){
+      poiB.classList.add('is-done');
+      document.getElementById('poi-c').classList.remove('is-hidden');
+      closeB();
+    });
 
-      // Al completar A: volver al mapa, apagar A y revelar B
-      document.getElementById('finish-a').addEventListener('click', function(){
-        marker.classList.add('is-done');
-        poiB.classList.remove('is-hidden');
-        closeA();
-      });
+    /* ---- PUNTO C ---- */
+    var poiC=document.getElementById('poi-c'), overlayC=document.getElementById('overlay-c');
+    function openC(){ overlayC.hidden=false; }
+    function closeC(){ overlayC.hidden=true; poiC.focus(); }
+    poiC.addEventListener('click',openC);
+    poiC.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openC();}});
+    overlayC.querySelectorAll('[data-close="c"]').forEach(function(el){el.addEventListener('click',closeC);});
 
-      // --- Escape: cierra lo que esté abierto, de arriba a abajo ---
-      document.addEventListener('keydown', function(e){
-        if(e.key !== 'Escape') return;
-        if(!overlayB.hidden){ closeB(); }
-        else if(!overlayA.hidden){ closeA(); }
-        else if(!intro.hidden){ intro.hidden = true; }
-        else if(frame.classList.contains('is-immersive')){ exitImmersive(); }
-      });
-    })();
+    /* ---- Escape global ---- */
+    document.addEventListener('keydown',function(e){
+      if(e.key!=='Escape') return;
+      if(!overlayC.hidden){ closeC(); }
+      else if(!overlayB.hidden){ closeB(); }
+      else if(!overlayA.hidden){ closeA(); }
+      else if(!intro.hidden){ intro.hidden=true; }
+      else if(frame.classList.contains('is-immersive')){ exitImmersive(); }
+    });
+  })();
   </script>
 </body>
 </html>
